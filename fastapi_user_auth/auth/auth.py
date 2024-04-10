@@ -153,6 +153,7 @@ class Auth(Generic[UserModelT]):
             return request.scope["user"]
         token_info = await self._get_token_info(request)
         request.scope["user"]: UserModelT = await self.db.async_get(self.user_model, token_info.id) if token_info else None
+        await self.db.async_commit()
         return request.scope["user"]
 
     def requires(

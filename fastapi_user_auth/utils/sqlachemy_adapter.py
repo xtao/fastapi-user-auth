@@ -91,6 +91,7 @@ class Adapter(AsyncAdapter, AsyncUpdateAdapter):
         result = await self.db.async_scalars(select(self._db_class))
         for line in result:
             persist.load_policy_line(str(line), model)
+        await self.db.async_commit()
 
     def is_filtered(self) -> bool:
         """returns whether the adapter is filtered or not."""
@@ -106,6 +107,7 @@ class Adapter(AsyncAdapter, AsyncUpdateAdapter):
         for line in result:
             persist.load_policy_line(str(line), model)
         self._filtered = True
+        await self.db.async_commit()
 
     def filter_query(self, querydb: Select, filter_: Filter) -> Select:
         """filters the query based on the filter_."""
