@@ -119,6 +119,7 @@ class Auth(Generic[UserModelT]):
         request.scope["auth"] = self  # 为了在token_store中使用
         token = self.backend.get_user_token(request)
         request.scope["user_token_info"] = await self.backend.token_store.read_token(token) if token else None
+        await self.enforcer.load_policy()
         return request.scope["user_token_info"]
 
     async def get_current_user_identity(self, request: Request, name: str = None) -> str:
